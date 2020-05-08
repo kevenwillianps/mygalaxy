@@ -212,9 +212,9 @@
 
                 inputs : {
 
-                    name : null,
-                    file : null,
-                    base64Array : [],
+                    name    : null,
+                    file    : null,
+                    part    : null,
 
                 },
 
@@ -249,28 +249,46 @@
 
                 }
 
-                this.inputs.base64Array = frase;
+                var count = 0;
 
-                for(let i = 0; i < 10; i++){
+                do{
 
-                    axios.post('router.php?TABLE=FILES&ACTION=SAVE', {inputs: this.inputs})
+                   axios.post('router.php?TABLE=FILES&ACTION=SAVE',
 
-                        .then(response => {
+                       {
 
-                            this.table.show = false;
-                            this.alert.show = true;
+                           inputs: {
 
-                            console.log('Sucesso:' + response.data.cod)
+                               name    : this.inputs.name,
+                               file    : this.inputs.file,
+                               part    : frase[count],
+                               count   : count,
+                               pointer : count === 3 ? 'false' : 'true',
 
-                        })
+                           },
 
-                        .catch(response => {
+                       })
 
-                            console.log('Erro:' + response.data.cod)
+                       .then(response => {
 
-                        });
+                           this.table.show = false;
+                           this.alert.show = true;
 
-                }
+                           console.log('Sucesso:' + response.data.cod);
+
+
+                       })
+
+                       .catch(response => {
+
+                           console.log('Erro:' + response.data.cod);
+
+                       });
+
+                    count++;
+
+                }while (count < 5);
+
 
             },
 

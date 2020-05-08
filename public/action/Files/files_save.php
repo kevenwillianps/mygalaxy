@@ -15,9 +15,11 @@ try{
    $Files     = $Main->LoadClass('Files');
 
    /** Parâmetros de entrada **/
-   $file_id   = isset($inputs['inputs']['file_id']) ? (int)$Main->anti_injection($inputs['inputs']['file_id']) : 0;
-   $file      = isset($inputs['inputs']['file'])    ? explode(',', $inputs['inputs']['file'])         : '';
-   $name      = isset($inputs['inputs']['name'])    ? (string)$Main->anti_injection($inputs['inputs']['name']) : '';
+   $file_id   = isset($inputs['inputs']['file_id']) ? (int)$Main->anti_injection($inputs['inputs']['file_id'])    : 0;
+   $file      = isset($inputs['inputs']['file'])    ? explode(',', $inputs['inputs']['file'])            : '';
+   $name      = isset($inputs['inputs']['name'])    ? (string)$Main->anti_injection($inputs['inputs']['name'])    : '';
+   $part      = isset($inputs['inputs']['part'])    ? (string)$Main->anti_injection($inputs['inputs']['part'])    : '';
+   $pointer   = isset($inputs['inputs']['pointer']) ? (string)$Main->anti_injection($inputs['inputs']['pointer']) : '';
 
    /** Pego a extensão do base64 **/
    $extension = explode('/', isset($inputs['inputs']['file']) ? (string)$Main->anti_injection($inputs['inputs']['file']) : '');
@@ -60,7 +62,7 @@ try{
 
    }
 
-   if($error > 0){
+    if($error > 0){
 
        /** Preparo o formulario para retorno **/
        $result = array("cod" => 0, "msg" => $message);
@@ -79,14 +81,33 @@ try{
        /** Verifico se existe o caminho **/
        if (is_dir($path)){
 
-           /** Crio meu arquivo e escrevo dentro dele **/
-           $document = fopen($path.'/'.$name, "wb");
+           if (strcmp($pointer, 'true' == 0)){
 
-           /** Escrevo dentro do arquivo **/
-           fwrite($document, base64_decode($file[1]));
+               /** Crio meu arquivo e escrevo dentro dele **/
+               $document = fopen($path.'/'.rand(1,10000).$name, "wb");
 
-           /** Encerro a escrita do arquivo **/
-           fclose($document);
+               /** Escrevo dentro do arquivo **/
+//           fwrite($document, base64_decode($file[1]));
+               fwrite($document, $part);
+
+               /** Encerro a escrita do arquivo **/
+               fclose($document);
+
+           }else{
+
+               /** Result **/
+               $result = array("cod" => 0, "msg" => "Não foi possível criar o arquivo");
+
+               /** Pause **/
+               sleep(1);
+
+               /** Envio **/
+               echo json_encode($result);
+
+               /** Paro o procedimento **/
+               exit;
+
+           }
 
            if (is_file($path.'/'.$name)){
 
@@ -130,10 +151,11 @@ try{
            if (is_dir($path)){
 
                /** Crio meu arquivo e escrevo dentro dele **/
-               $document = fopen($path.'/'.$name, "wb");
+               $document = fopen($path.'/'.rand(1,10000).$name, "wb");
 
                /** Escrevo dentro do arquivo **/
-               fwrite($document, base64_decode($file[1]));
+//               fwrite($document, base64_decode($file[1]));
+               fwrite($document, $part);
 
                /** Encerro a escrita do arquivo **/
                fclose($document);
