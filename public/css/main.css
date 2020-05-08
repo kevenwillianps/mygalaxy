@@ -1,0 +1,25 @@
+body{
+
+    background: #F7F7F7 !important;
+    color: #333333;
+
+}
+
+.btn-default{
+    color: #fff;
+    background-color: rgba(253, 160, 127, 1);
+    border-color: rgba(251, 122, 91, 1);
+}
+
+.btn-default:hover{
+    color: #fff;
+    background-color: rgba(251, 122, 91, 1);
+    border-color: rgba(251, 122, 91, 1);
+}
+
+.alert-default{
+    color: rgba(255, 255, 255, 1);
+    background-color: rgba(253, 160, 127, 1);
+    border-color: rgba(251, 122, 91, 1);
+
+}
