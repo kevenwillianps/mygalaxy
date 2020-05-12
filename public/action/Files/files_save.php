@@ -15,16 +15,12 @@ try{
    $Files     = $Main->LoadClass('Files');
 
    /** Parâmetros de entrada **/
-   $file_id   = isset($inputs['inputs']['file_id']) ? (int)$Main->anti_injection($inputs['inputs']['file_id'])    : 0;
-   $file      = isset($inputs['inputs']['file'])    ? explode(',', $inputs['inputs']['file'])            : '';
-   $name      = isset($inputs['inputs']['name'])    ? (string)$Main->anti_injection($inputs['inputs']['name'])    : '';
-   $part      = isset($inputs['inputs']['part'])    ? (string)$Main->anti_injection($inputs['inputs']['part'])    : '';
-   $pointer   = isset($inputs['inputs']['pointer']) ? (string)$Main->anti_injection($inputs['inputs']['pointer']) : '';
-
-   /** Pego a extensão do base64 **/
-   $extension = explode('/', isset($inputs['inputs']['file']) ? (string)$Main->anti_injection($inputs['inputs']['file']) : '');
-   $extension = explode(';', $extension[1]);
-   $extension = $extension[0];
+   $file_id   = isset($inputs['inputs']['file_id'])   ? (int)$Main->anti_injection($inputs['inputs']['file_id'])      : 0;
+   $name      = isset($inputs['inputs']['name'])      ? (string)$Main->anti_injection($inputs['inputs']['name'])      : '';
+   $pointer   = isset($inputs['inputs']['pointer'])   ? (int)$Main->anti_injection($inputs['inputs']['pointer'])      : 0;
+   $part      = isset($inputs['inputs']['part'])      ? (string)$Main->anti_injection($inputs['inputs']['part'])      : '';
+   $length    = isset($inputs['inputs']['length'])    ? (int)$Main->anti_injection($inputs['inputs']['length'])       : 0;
+   $extension = isset($inputs['inputs']['extension']) ? (string)$Main->anti_injection($inputs['inputs']['extension']) : '';
 
    /** Pego o ano atual **/
    $year      = date('Y');
@@ -44,21 +40,42 @@ try{
    if($file_id < 0){
 
        $error++;
-       $message[0] = $error. ' - O seguinte campo deve ser preenchido/selecionado <strong>file_id</strong>.<br/>';
+       $message[0] = $error. 'file_id - O seguinte campo deve ser preenchido/selecionado';
 
    }
    /** Verifico se o campo name foi preenchido **/
    if(empty($name)){
 
        $error++;
-       $message[1] = $error. ' - O seguinte campo deve ser preenchido/selecionado <strong>name</strong>.<br/>';
+       $message[1] = $error. 'name - O seguinte campo deve ser preenchido/selecionadop';
 
    }
    /** Verifico se o campo path foi preenchido **/
-   if(empty($path)){
+   if($pointer < 0){
 
        $error++;
-       $message[2] = $error. ' - O seguinte campo deve ser preenchido/selecionado <strong>path</strong>.<br/>';
+       $message[2] = $error. 'pointer - O seguinte campo deve ser preenchido/selecionado';
+
+   }
+   /** Verifico se o campo path foi preenchido **/
+   if(empty($part)){
+
+       $error++;
+       $message[3] = $error. 'part - O seguinte campo deve ser preenchido/selecionado';
+
+   }
+   /** Verifico se o campo path foi preenchido **/
+   if($length < 0){
+
+       $error++;
+       $message[4] = $error. 'length - O seguinte campo deve ser preenchido/selecionado';
+
+   }
+   /** Verifico se o campo path foi preenchido **/
+   if(empty($extension)){
+
+        $error++;
+        $message[5] = $error. 'extension - O seguinte campo deve ser preenchido/selecionado';
 
    }
 
@@ -81,80 +98,80 @@ try{
        /** Verifico se existe o caminho **/
        if (is_dir($path)){
 
-           if (strcmp($pointer, 'true' == 0)){
+           if ($pointer == ($length - 1)){
 
-               /** Crio meu arquivo e escrevo dentro dele **/
-               $document = fopen($path.'/'.rand(1,10000).$name, "wb");
+               /** Pego o conteúdo do arquivo **/
+               $file    = file_get_contents($path.'/'.$name);
 
-               /** Escrevo dentro do arquivo **/
-//           fwrite($document, base64_decode($file[1]));
-               fwrite($document, $part);
+               /** Decodifico o base64 do arquivo **/
+               $content = substr($file, (strpos($file, ',') + 1));
 
-               /** Encerro a escrita do arquivo **/
-               fclose($document);
+               if (!empty($content)){
+
+                   /** Crio meu arquivo e escrevo dentro dele **/
+                   $document = fopen($path.'/'.$name, "w+");
+
+                   /** Escrevo dentro do arquivo **/
+                   fwrite($document, base64_decode($content));
+
+                   /** Encerro a escrita do arquivo **/
+                   fclose($document);
+
+                   if (is_file($path.'/'.$name)){
+
+                       /** Método para salvar o registro **/
+                       $Files->Save($file_id, $name, $path);
+
+                       /** Result **/
+                       $result = array("cod" => 1, "msg" => "Arquivo salvo com sucesso!");
+
+                       /** Pause **/
+                       sleep(1);
+
+                       /** Envio **/
+                       echo json_encode($result);
+
+                       /** Paro o procedimento **/
+                       exit;
+
+                   }else{
+
+                       /** Result **/
+                       $result = array("cod" => 0, "msg" => "Não foi possível salvar o arquivo");
+
+                       /** Pause **/
+                       sleep(1);
+
+                       /** Envio **/
+                       echo json_encode($result);
+
+                       /** Paro o procedimento **/
+                       exit;
+
+                   }
+
+               }else{
+
+                   /** Result **/
+                   $result = array("cod" => 0, "msg" => "Não foi possível localizar o arquivo");
+
+                   /** Pause **/
+                   sleep(1);
+
+                   /** Envio **/
+                   echo json_encode($result);
+
+                   /** Paro o procedimento **/
+                   exit;
+
+               }
 
            }else{
 
-               /** Result **/
-               $result = array("cod" => 0, "msg" => "Não foi possível criar o arquivo");
-
-               /** Pause **/
-               sleep(1);
-
-               /** Envio **/
-               echo json_encode($result);
-
-               /** Paro o procedimento **/
-               exit;
-
-           }
-
-           if (is_file($path.'/'.$name)){
-
-               /** Método para salvar o registro **/
-               $Files->Save($file_id, $name, $path);
-
-               /** Result **/
-               $result = array("cod" => 1, "msg" => "Arquivo salvo com sucesso!");
-
-               /** Pause **/
-               sleep(1);
-
-               /** Envio **/
-               echo json_encode($result);
-
-               /** Paro o procedimento **/
-               exit;
-
-           }else{
-
-               /** Result **/
-               $result = array("cod" => 0, "msg" => "Não foi possível criar o arquivo");
-
-               /** Pause **/
-               sleep(1);
-
-               /** Envio **/
-               echo json_encode($result);
-
-               /** Paro o procedimento **/
-               exit;
-
-           }
-
-       }else{
-
-           /** Crio o caminho **/
-           mkdir($path, 0777, true);
-
-           /** Verifico se existe o caminho **/
-           if (is_dir($path)){
-
                /** Crio meu arquivo e escrevo dentro dele **/
-               $document = fopen($path.'/'.rand(1,10000).$name, "wb");
+               $document = fopen($path.'/'.$name, "a+");
 
                /** Escrevo dentro do arquivo **/
-//               fwrite($document, base64_decode($file[1]));
                fwrite($document, $part);
 
                /** Encerro a escrita do arquivo **/
@@ -162,11 +179,8 @@ try{
 
                if (is_file($path.'/'.$name)){
 
-                   /** Método para salvar o registro **/
-                   $Files->Save($file_id, $name, $path);
-
                    /** Result **/
-                   $result = array("cod" => 1, "msg" => "Arquivo salvo com sucesso!");
+                   $result = array("cod" => 1, "msg" => "Arquivo criado com sucesso");
 
                    /** Pause **/
                    sleep(1);
@@ -190,6 +204,127 @@ try{
 
                    /** Paro o procedimento **/
                    exit;
+
+               }
+
+           }
+
+       }else{
+
+           /** Crio o caminho **/
+           mkdir($path, 0777, true);
+
+           /** Verifico se existe o caminho **/
+           if (is_dir($path)){
+
+               if ($pointer == ($length - 1)){
+
+                   /** Pego o conteúdo do arquivo **/
+                   $file    = file_get_contents($path.'/'.$name);
+
+                   /** Decodifico o base64 do arquivo **/
+                   $content = substr($file, (strpos($file, ',') + 1));
+
+                   if (!empty($content)){
+
+                       /** Crio meu arquivo e escrevo dentro dele **/
+                       $document = fopen($path.'/'.$name, "w+");
+
+                       /** Escrevo dentro do arquivo **/
+                       fwrite($document, base64_decode($content));
+
+                       /** Encerro a escrita do arquivo **/
+                       fclose($document);
+
+                       if (is_file($path.'/'.$name)){
+
+                           /** Método para salvar o registro **/
+                           $Files->Save($file_id, $name, $path);
+
+                           /** Result **/
+                           $result = array("cod" => 1, "msg" => "Arquivo salvo com sucesso!");
+
+                           /** Pause **/
+                           sleep(1);
+
+                           /** Envio **/
+                           echo json_encode($result);
+
+                           /** Paro o procedimento **/
+                           exit;
+
+                       }else{
+
+                           /** Result **/
+                           $result = array("cod" => 0, "msg" => "Não foi possível salvar o arquivo");
+
+                           /** Pause **/
+                           sleep(1);
+
+                           /** Envio **/
+                           echo json_encode($result);
+
+                           /** Paro o procedimento **/
+                           exit;
+
+                       }
+
+                   }else{
+
+                       /** Result **/
+                       $result = array("cod" => 0, "msg" => "Não foi possível localizar o arquivo");
+
+                       /** Pause **/
+                       sleep(1);
+
+                       /** Envio **/
+                       echo json_encode($result);
+
+                       /** Paro o procedimento **/
+                       exit;
+
+                   }
+
+               }else{
+
+                   /** Crio meu arquivo e escrevo dentro dele **/
+                   $document = fopen($path.'/'.$name, "a+");
+
+                   /** Escrevo dentro do arquivo **/
+                   fwrite($document, $part);
+
+                   /** Encerro a escrita do arquivo **/
+                   fclose($document);
+
+                   if (is_file($path.'/'.$name)){
+
+                       /** Result **/
+                       $result = array("cod" => 1, "msg" => "Arquivo criado com sucesso");
+
+                       /** Pause **/
+                       sleep(1);
+
+                       /** Envio **/
+                       echo json_encode($result);
+
+                       /** Paro o procedimento **/
+                       exit;
+
+                   }else{
+
+                       /** Result **/
+                       $result = array("cod" => 0, "msg" => "Não foi possível criar o arquivo");
+
+                       /** Pause **/
+                       sleep(1);
+
+                       /** Envio **/
+                       echo json_encode($result);
+
+                       /** Paro o procedimento **/
+                       exit;
+
+                   }
 
                }
 

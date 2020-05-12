@@ -23,3 +23,18 @@ body{
     border-color: rgba(251, 122, 91, 1);
 
 }
+
+.progress-bar {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-pack: center;
+    justify-content: center;
+    overflow: hidden;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    background-color: rgba(251, 122, 91, 1);
+    transition: width .6s ease;
+}

@@ -4,45 +4,43 @@
 
     <div class="container">
 
-      <div class="row mx-auto">
+      <div class="row">
 
-        <div class="offset-1 col-md-9">
+        <div class="card shadow-sm mt-3">
 
-          <div class="card shadow-sm mt-3">
+          <div class="card-body">
 
-            <div class="card-body">
+            <div class="row">
 
-              <div class="row">
+              <div class="col-md-12">
 
-                <div class="col-md-12">
+                <div class="media">
 
-                  <div class="media">
+                  <img src="img/planet.png" class="mr-4" width="70px" alt="MyGalaxy">
 
-                    <img src="img/planet.png" class="mr-4" width="70px" alt="MyGalaxy">
+                  <div class="media-body">
 
-                    <div class="media-body">
+                    <h2 class="mt-0">
 
-                      <h2 class="mt-0">
+                      Bem vindo ao <strong> MyGalaxy!</strong>
 
-                        Bem vindo ao <strong> MyGalaxy!</strong>
+                    </h2>
 
-                      </h2>
+                    <p class="text-muted">
 
-                      <p class="text-muted">
+                      Envie seus arquivos para a <strong>galáxia</strong> e use o link para <strong>download</strong>!
 
-                        Envie seus arquivos para a <strong>galáxia</strong> e use o link para <strong>download</strong>!
-
-                      </p>
-
-                    </div>
+                    </p>
 
                   </div>
 
                 </div>
 
-                <div class="col-md-12 mt-3">
+              </div>
 
-                  <div class="file-drop-area">
+              <div class="col-md-12 mt-3">
+
+                <div class="file-drop-area">
 
                     <span class="fake-btn mr-3">
 
@@ -50,13 +48,45 @@
 
                     </span>
 
-                    <span class="file-msg">
+                  <span class="file-msg">
 
                       Arraste seus arquivos e solte até aqui para carregalos
 
                     </span>
 
-                    <input class="file-input" type="file" v-on:change="onChange">
+                  <input class="file-input" type="file" v-on:change="onChange">
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div v-if="inputs.file && table.show">
+
+            <div class="card-body">
+
+              <div class="media">
+
+                <img src="img/arrows.png" class="mr-3" alt="..." width="64px">
+
+                <div class="media-body">
+
+                  <h3 class="mt-0">
+
+                    {{ inputs.name }}
+
+                  </h3>
+
+                  <div class="progress" style="height: 25px;">
+
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" v-bind:style="'width:' + table.progressBar + '%;'" v-bind:aria-valuenow="table.progressBar" aria-valuemin="0" aria-valuemax="100">
+
+                      {{table.progressBar}}%
+
+                    </div>
 
                   </div>
 
@@ -66,120 +96,51 @@
 
             </div>
 
-            <div v-if="inputs.file && table.show">
+          </div>
 
-              <div class="table-responsive">
+          <div class="card-body border-top">
 
-                <table class="table align-items-center table-flush">
+            <div class="row">
 
-                  <thead class="thead-light">
+              <div class="col-md-12" v-if="table.show">
 
-                    <tr>
+                <div class="form-group text-right">
 
-                      <th scope="col">Nome</th>
-                      <th scope="col">Status</th>
-                      <th scope="col">Andamento</th>
-                      <th scope="col"></th>
+                  <button class="btn btn-default btn-lg" v-on:click="PrepareForm">
 
-                    </tr>
+                    <i class="fa fa-rocket"></i>
 
-                  </thead>
+                    Enviar
 
-                  <tbody>
-
-                    <tr>
-
-                      <td>
-
-                        {{ table.name }}
-
-                      </td>
-
-                      <td>
-
-                        {{ table.status }}
-
-                      </td>
-
-                      <td>
-
-                        <div class="d-flex align-items-center">
-
-                          <span class="mr-2">
-
-                            60%
-
-                          </span>
-
-                          <div>
-
-                            <div class="progress">
-
-                              <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-
-                            </div>
-
-                          </div>
-
-                        </div>
-
-                      </td>
-
-                    </tr>
-
-                  </tbody>
-
-                </table>
-
-              </div>
-
-            </div>
-
-            <div class="card-body border-top">
-
-              <div class="row">
-
-                <div class="col-md-12" v-if="table.show">
-
-                  <div class="form-group text-right">
-
-                    <button class="btn btn-default btn-lg" v-on:click="submitForm">
-
-                      <i class="fa fa-rocket"></i>
-
-                      Enviar
-
-                    </button>
-
-                  </div>
+                  </button>
 
                 </div>
 
-                <div class="col-md-12" v-if="alert.show">
+              </div>
 
-                  <div class="alert alert-default" role="alert">
+              <div class="col-md-12" v-if="alert.show">
 
-                    <h4 class="alert-heading">
+                <div class="alert alert-default" role="alert">
 
-                      Sucesso!
+                  <h4 class="alert-heading">
 
-                    </h4>
+                    Sucesso!
 
-                    <p>
+                  </h4>
 
-                      Ooooowww yeah! Arquivos enviados com sucesso para <strong>galaxia</strong>! Utilize o link abaixo para realizar o download.
+                  <p>
 
-                    </p>
+                    Ooooowww yeah! Arquivos enviados com sucesso para <strong>galaxia</strong>! Utilize o link abaixo para realizar o download.
 
-                    <hr>
+                  </p>
 
-                    <h4 class="mb-0">
+                  <hr>
 
-                      <strong>Link:</strong> kevenwillian.com.br
+                  <h4 class="mb-0">
 
-                    </h4>
+                    <strong>Link:</strong> kevenwillian.com.br
 
-                  </div>
+                  </h4>
 
                 </div>
 
@@ -206,23 +167,28 @@
     export default {
 
         name: 'App',
+
         data (){
 
             return{
 
                 inputs : {
 
-                    name    : null,
-                    file    : null,
-                    part    : null,
+                    name      : null,
+                    file      : null,
+                    part      : null,
+                    length    : 0,
+                    count     : 0,
+                    extension : null,
 
                 },
 
                 table : {
 
-                    show   : false,
-                    name   : null,
-                    status : null,
+                    show        : false,
+                    name        : null,
+                    status      : null,
+                    progressBar : 0,
 
                 },
 
@@ -238,7 +204,7 @@
 
         methods: {
 
-            submitForm(){
+            async PrepareForm(){
 
                 var string = this.inputs.file;
                 var frase  = new Array();
@@ -249,65 +215,59 @@
 
                 }
 
-                var count = 0;
+                this.inputs.file   = frase;
+                this.inputs.length = frase.length;
 
-                do{
+                for (let i = 0; i < this.inputs.length; i++){
 
-                   axios.post('router.php?TABLE=FILES&ACTION=SAVE',
+                    await this.SendForm(this.inputs.name, i, frase[i], this.inputs.length, this.inputs.extension)
 
-                       {
+                        .then((response => {
 
-                           inputs: {
+                            this.CalculateProgressBar(i, this.inputs.length);
+                            console.log(response.cod);
 
-                               name    : this.inputs.name,
-                               file    : this.inputs.file,
-                               part    : frase[count],
-                               count   : count,
-                               pointer : count === 3 ? 'false' : 'true',
+                        }));
 
-                           },
+                }
 
-                       })
+            },
 
-                       .then(response => {
+            SendForm : async (name, pointer, part, length, extension) => {
 
-                           this.table.show = false;
-                           this.alert.show = true;
+                return axios.post('router.php?TABLE=FILES&ACTION=SAVE', {inputs: {name : name, pointer : pointer, part : part, length : length, extension : extension}});
 
-                           console.log('Sucesso:' + response.data.cod);
+            },
 
+            /** Calculo a barra de progresso **/
+            CalculateProgressBar(byteUploaded, length){
 
-                       })
-
-                       .catch(response => {
-
-                           console.log('Erro:' + response.data.cod);
-
-                       });
-
-                    count++;
-
-                }while (count < 5);
-
+                this.table.progressBar = (byteUploaded*100) / length;
 
             },
 
             onChange(e) {
 
+                /** Instâncimento de objeto para ler o conteúdo do arquivo ***/
                 var fileReader = new FileReader();
 
+                /** Leio o conteúdo do arquivo **/
                 fileReader.readAsDataURL(e.target.files[0]);
 
-                /** Coloco o nome do arquivo na tabela **/
-                this.inputs.name = e.target.files[0].name;
+                /** Pego o nome do arquivo **/
+                this.inputs.name      = e.target.files[0].name;
+                /** Pego o tipo do arquivo **/
+                this.inputs.extension = e.target.files[0].type;
 
                 fileReader.onload = (e) => {
 
                     /** Preencho o campo do arquivo **/
                     this.inputs.file = e.target.result;
-                    this.table.show = true;
 
-                }
+                    /** Ativo a visualização da tabela de dados **/
+                    this.table.show  = true;
+
+                };
 
             },
 
