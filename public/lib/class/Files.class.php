@@ -11,7 +11,7 @@
    require_once("lib/class/Host.php");
 
    /** Classe de conexão ao banco de dados Mysql **/
-   require_once("lib/class/Mysql.Class.php");
+   require_once("lib/class/Mysql.class.php");
 
    class Files
    {

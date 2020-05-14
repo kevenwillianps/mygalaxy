@@ -28,21 +28,21 @@
            if($ACTION == 'SAVE')
            {
 
-               include('action/files/files_save.php');
+               include('action/Files/files_save.php');
 
            }
            /** Rota para excluir um registro **/
            elseif($ACTION == 'DELETE')
            {
 
-               include('action/files/files_delete.php');
+               include('action/Files/files_delete.php');
 
            }
            /** Rota para listar registros **/
            elseif($ACTION == 'DATAGRID')
            {
 
-               include('action/files/files_datagrid.php');
+               include('action/Files/files_datagrid.php');
 
            }
            break;

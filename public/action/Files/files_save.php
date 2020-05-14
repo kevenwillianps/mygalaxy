@@ -100,63 +100,33 @@ try{
 
            if ($pointer == ($length - 1)){
 
-               /** Pego o conteúdo do arquivo **/
-               $file    = file_get_contents($path.'/'.$name);
+               /** Crio meu arquivo e escrevo dentro dele **/
+               $document = fopen($path.'/'.$name, "a+");
 
-               /** Decodifico o base64 do arquivo **/
-               $content = substr($file, (strpos($file, ',') + 1));
+               /** Escrevo dentro do arquivo **/
+               fwrite($document, base64_decode($part));
 
-               if (!empty($content)){
+               /** Encerro a escrita do arquivo **/
+               fclose($document);
 
-                   /** Crio meu arquivo e escrevo dentro dele **/
-                   $document = fopen($path.'/'.$name, "w+");
+               if (is_file($path.'/'.$name)){
 
-                   /** Escrevo dentro do arquivo **/
-                   fwrite($document, base64_decode($content));
+                   /** Método para salvar o registro **/
+                   $Files->Save($file_id, $name, $path);
 
-                   /** Encerro a escrita do arquivo **/
-                   fclose($document);
+                   /** Result **/
+                   $result = array("cod" => 1, "msg" => "Arquivo salvo com sucesso!");
 
-                   if (is_file($path.'/'.$name)){
+                   /** Envio **/
+                   echo json_encode($result);
 
-                       /** Método para salvar o registro **/
-                       $Files->Save($file_id, $name, $path);
-
-                       /** Result **/
-                       $result = array("cod" => 1, "msg" => "Arquivo salvo com sucesso!");
-
-                       /** Pause **/
-                       sleep(1);
-
-                       /** Envio **/
-                       echo json_encode($result);
-
-                       /** Paro o procedimento **/
-                       exit;
-
-                   }else{
-
-                       /** Result **/
-                       $result = array("cod" => 0, "msg" => "Não foi possível salvar o arquivo");
-
-                       /** Pause **/
-                       sleep(1);
-
-                       /** Envio **/
-                       echo json_encode($result);
-
-                       /** Paro o procedimento **/
-                       exit;
-
-                   }
+                   /** Paro o procedimento **/
+                   exit;
 
                }else{
 
                    /** Result **/
-                   $result = array("cod" => 0, "msg" => "Não foi possível localizar o arquivo");
-
-                   /** Pause **/
-                   sleep(1);
+                   $result = array("cod" => 0, "msg" => "Não foi localizado o arquivo");
 
                    /** Envio **/
                    echo json_encode($result);
@@ -172,7 +142,7 @@ try{
                $document = fopen($path.'/'.$name, "a+");
 
                /** Escrevo dentro do arquivo **/
-               fwrite($document, $part);
+               fwrite($document, base64_decode($part));
 
                /** Encerro a escrita do arquivo **/
                fclose($document);
@@ -181,9 +151,6 @@ try{
 
                    /** Result **/
                    $result = array("cod" => 1, "msg" => "Arquivo criado com sucesso");
-
-                   /** Pause **/
-                   sleep(1);
 
                    /** Envio **/
                    echo json_encode($result);
@@ -195,9 +162,6 @@ try{
 
                    /** Result **/
                    $result = array("cod" => 0, "msg" => "Não foi possível criar o arquivo");
-
-                   /** Pause **/
-                   sleep(1);
 
                    /** Envio **/
                    echo json_encode($result);
@@ -219,63 +183,33 @@ try{
 
                if ($pointer == ($length - 1)){
 
-                   /** Pego o conteúdo do arquivo **/
-                   $file    = file_get_contents($path.'/'.$name);
+                   /** Crio meu arquivo e escrevo dentro dele **/
+                   $document = fopen($path.'/'.$name, "a+");
 
-                   /** Decodifico o base64 do arquivo **/
-                   $content = substr($file, (strpos($file, ',') + 1));
+                   /** Escrevo dentro do arquivo **/
+                   fwrite($document, base64_decode($part));
 
-                   if (!empty($content)){
+                   /** Encerro a escrita do arquivo **/
+                   fclose($document);
 
-                       /** Crio meu arquivo e escrevo dentro dele **/
-                       $document = fopen($path.'/'.$name, "w+");
+                   if (is_file($path.'/'.$name)){
 
-                       /** Escrevo dentro do arquivo **/
-                       fwrite($document, base64_decode($content));
+                       /** Método para salvar o registro **/
+                       $Files->Save($file_id, $name, $path);
 
-                       /** Encerro a escrita do arquivo **/
-                       fclose($document);
+                       /** Result **/
+                       $result = array("cod" => 1, "msg" => "Arquivo salvo com sucesso!");
 
-                       if (is_file($path.'/'.$name)){
+                       /** Envio **/
+                       echo json_encode($result);
 
-                           /** Método para salvar o registro **/
-                           $Files->Save($file_id, $name, $path);
-
-                           /** Result **/
-                           $result = array("cod" => 1, "msg" => "Arquivo salvo com sucesso!");
-
-                           /** Pause **/
-                           sleep(1);
-
-                           /** Envio **/
-                           echo json_encode($result);
-
-                           /** Paro o procedimento **/
-                           exit;
-
-                       }else{
-
-                           /** Result **/
-                           $result = array("cod" => 0, "msg" => "Não foi possível salvar o arquivo");
-
-                           /** Pause **/
-                           sleep(1);
-
-                           /** Envio **/
-                           echo json_encode($result);
-
-                           /** Paro o procedimento **/
-                           exit;
-
-                       }
+                       /** Paro o procedimento **/
+                       exit;
 
                    }else{
 
                        /** Result **/
-                       $result = array("cod" => 0, "msg" => "Não foi possível localizar o arquivo");
-
-                       /** Pause **/
-                       sleep(1);
+                       $result = array("cod" => 0, "msg" => "Não foi localizado o arquivo");
 
                        /** Envio **/
                        echo json_encode($result);
@@ -291,7 +225,7 @@ try{
                    $document = fopen($path.'/'.$name, "a+");
 
                    /** Escrevo dentro do arquivo **/
-                   fwrite($document, $part);
+                   fwrite($document, base64_decode($part));
 
                    /** Encerro a escrita do arquivo **/
                    fclose($document);
@@ -300,9 +234,6 @@ try{
 
                        /** Result **/
                        $result = array("cod" => 1, "msg" => "Arquivo criado com sucesso");
-
-                       /** Pause **/
-                       sleep(1);
 
                        /** Envio **/
                        echo json_encode($result);
@@ -314,9 +245,6 @@ try{
 
                        /** Result **/
                        $result = array("cod" => 0, "msg" => "Não foi possível criar o arquivo");
-
-                       /** Pause **/
-                       sleep(1);
 
                        /** Envio **/
                        echo json_encode($result);
