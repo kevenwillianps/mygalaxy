@@ -134,7 +134,7 @@
 
           </div>
 
-          <div class="col-md-12 mt-3" v-if="alert.show">
+          <div class="col-md-12 mt-3" v-if="alert.download_id > 0">
 
             <div class="alert alert-default">
 
@@ -202,9 +202,8 @@
 
                 alert : {
 
-                    show : false,
                     url_download : 'https://wwww.mygalaxy.kevenwillian.com.br/',
-                    download_id : 0,
+                    download_id  : 0,
 
                 }
 
@@ -217,42 +216,14 @@
             /** Preparo o formulário para envio **/
             async PrepareForm(){
 
-                /** Particionar o base64 em Array **/
-                let localString = this.inputs.file;
-                let start       = 0;
-                let end         = 2097152;
-                let localArray  = new Array();
-                let part        = null;
-
-                /** Executo de acordo com o tamanho do base64 **/
-                for (let i = 0; i < localString.length; i++){
-
-                    /** Preencho selecionando o que esta entre o valor inicial e final **/
-                    part = localString.substring(start, end);
-
-                    /** Verifico se cheguei ao final do base64, senão preencho as variáveis **/
-                    if (part && part !== null){
-
-                        localArray.push(part);
-
-                        /** Crio um novo intervalo de valores **/
-                        start = end;
-                        end   = end + 2097152;
-
-                    }
-
-                }
-
-                this.inputs.length = localString.length;
-
                 /** Envio as requisições de acordo com o tamanho da array **/
-                for (let i = 0; i < localArray.length; i++){
+                for (let i = 0; i < this.inputs.length; i++){
 
-                    await this.SendForm(this.inputs.name, i, localArray[i], localArray.length, this.inputs.extension)
+                    await this.SendForm(this.inputs.name, i, this.inputs.file[i], this.inputs.length, this.inputs.extension)
 
                         .then((response => {
 
-                            this.CalculateProgressBar(i, (localArray.length - 1));
+                            this.CalculateProgressBar(i, (this.inputs.length - 1));
                             console.log(response.data.cod);
                             
                             if (response.data.cod == 99){
@@ -265,7 +236,6 @@
 
                 }
 
-                this.alert.show = true;
                 this.ResetForm();
 
             },
@@ -286,25 +256,22 @@
 
             ResetForm(){
 
-                /** Lmpo minhas variaveis **/
+                /** Limpo minhas variaveis **/
                 this.inputs.name          = null;
                 this.inputs.file          = null;
                 this.inputs.part          = null;
                 this.inputs.length        = 0;
                 this.inputs.extension     = null;
                 this.controls.progressBar = 0;
-                this.alert.url_download   = 'https://wwww.mygalaxy.kevenwillian.com.br/';
 
             },
 
             onChange(e) {
 
-                /** Lmpo minhas variaveis **/
-                this.ResetForm();
-                this.alert.show = false;
+                this.alert.download_id = 0;
 
                 /** Instâncimento de objeto para ler o conteúdo do arquivo ***/
-                var fileReader = new FileReader();
+                let fileReader = new FileReader();
 
                 /** Leio o conteúdo do arquivo **/
                 fileReader.readAsDataURL(e.target.files[0]);
@@ -317,11 +284,38 @@
 
                 fileReader.onload = (e) => {
 
-                    /** Preencho o campo do arquivo **/
-                    this.inputs.file = e.target.result.substring(e.target.result.indexOf(",") + 1);
+                    /** Particionar o base64 em Array **/
+                    let localString = e.target.result.substring(e.target.result.indexOf(",") + 1);
+                    let start       = 0;
+                    let end         = 2097152;
+                    let localArray  = Array();
+                    let part        = null;
 
-                    /** Ativo a visualização da tabela de dados **/
-                    this.controls.show  = true;
+                    /** Executo de acordo com o tamanho do base64 **/
+                    for (let i = 0; i < localString.length; i++){
+
+                        /** Preencho selecionando o que esta entre o valor inicial e final **/
+                        part = localString.substring(start, end);
+
+                        /** Verifico se cheguei ao final do base64, senão preencho as variáveis **/
+                        if (part && part !== null){
+
+                            /** Coloca o trecho do base64 na última posição da array **/
+                            localArray.push(part);
+
+                            /** Crio um novo intervalo de valores **/
+                            start = end;
+                            end   = end + 2097152;
+
+                        }
+
+                    }
+
+                    /** Pego o tamanho da minha array **/
+                    this.inputs.length = localArray.length;
+
+                    /** Transfiro minha array **/
+                    this.inputs.file   = localArray;
 
                 };
 
