@@ -72,17 +72,19 @@
 
                   </h3>
 
-                  <div class="progress" style="height: 25px;" v-if="controls.progressBarAuxiliary">
+                </div>
 
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+              </div>
 
-                      100%
+            </div>
 
-                    </div>
+            <div class="col-md-12 mt-3">
 
-                  </div>
+              <div class="row">
 
-                  <div class="progress" style="height: 25px;" v-else-if="controls.progressBar > 0">
+                <div class="col-md-12 mb-3" v-if="controls.progressBar > 0 && controls.progressBar < 100">
+
+                  <div class="progress" style="height: 25px;">
 
                     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" v-bind:style="'width:' + controls.progressBar + '%;'" v-bind:aria-valuenow="controls.progressBar" aria-valuemin="0" aria-valuemax="100">
 
@@ -94,21 +96,13 @@
 
                 </div>
 
-              </div>
-
-            </div>
-
-            <div class="col-md-12 mt-3">
-
-              <div class="row">
-
                 <div class="col-md-6">
 
                   <div class="form-group text-left">
 
                     <button class="btn btn-default btn-lg" v-on:click="ResetForm">
 
-                      <i class="fa fa-close"></i>
+                      <i class="fa fa-times"></i>
 
                       Cancelar
 
@@ -135,6 +129,34 @@
                 </div>
 
               </div>
+
+            </div>
+
+          </div>
+
+          <div class="col-md-12 mt-3" v-if="alert.show">
+
+            <div class="alert alert-default">
+
+              <h2 class="alert-heading">
+
+                Arquivo enviado com sucesso!
+
+              </h2>
+
+              <p>
+
+                Provavelmente o seu arquivo esteja viajando pelos os aneis de Saturno, ou esteja em um outro sistema solar, o importante é que você tera o seu arquivo de volta ao usar o link de <strong>donwload</strong>
+
+              </p>
+
+              <hr>
+
+              <h3 class="mb-0">
+
+                {{ alert.url_download }}{{ alert.download_id }}
+
+              </h3>
 
             </div>
 
@@ -174,13 +196,17 @@
 
                 controls : {
 
-                    show                 : false,
-                    name                 : null,
-                    status               : null,
-                    progressBar          : 0,
-                    progressBarAuxiliary : false,
+                    progressBar : 0,
 
                 },
+
+                alert : {
+
+                    show : false,
+                    url_download : 'https://wwww.mygalaxy.kevenwillian.com.br/',
+                    download_id : 0,
+
+                }
 
             }
 
@@ -227,11 +253,20 @@
                         .then((response => {
 
                             this.CalculateProgressBar(i, (localArray.length - 1));
-                            console.log(response.cod);
+                            console.log(response.data.cod);
+                            
+                            if (response.data.cod == 99){
+
+                                this.alert.download_id = response.data.file_id;
+
+                            }
 
                         }));
 
                 }
+
+                this.alert.show = true;
+                this.ResetForm();
 
             },
 
@@ -258,15 +293,15 @@
                 this.inputs.length        = 0;
                 this.inputs.extension     = null;
                 this.controls.progressBar = 0;
+                this.alert.url_download   = 'https://wwww.mygalaxy.kevenwillian.com.br/';
 
             },
 
             onChange(e) {
 
-                this.controls.progressBarAuxiliary = true;
-
                 /** Lmpo minhas variaveis **/
                 this.ResetForm();
+                this.alert.show = false;
 
                 /** Instâncimento de objeto para ler o conteúdo do arquivo ***/
                 var fileReader = new FileReader();
@@ -276,22 +311,19 @@
 
                 /** Pego o nome do arquivo **/
                 this.inputs.name      = e.target.files[0].name;
+
                 /** Pego o tipo do arquivo **/
                 this.inputs.extension = e.target.files[0].type;
 
                 fileReader.onload = (e) => {
 
-                    let base64 = e.target.result;
-
                     /** Preencho o campo do arquivo **/
-                    this.inputs.file = base64.substring(base64.indexOf(",") + 1);
+                    this.inputs.file = e.target.result.substring(e.target.result.indexOf(",") + 1);
 
                     /** Ativo a visualização da tabela de dados **/
                     this.controls.show  = true;
 
                 };
-
-                this.controls.progressBarAuxiliary = false;
 
             },
 

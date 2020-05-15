@@ -43,6 +43,21 @@
 
        }
 
+       /** Lista um registro específico **/
+       public function GetLastRegister()
+       {
+
+           /** Consulta SQL **/
+           $sql = "select * from files order by file_id desc limit 1";
+
+           /** Executo o comando SQL **/
+           $this->obj->ExecuteQuery($sql);
+
+           /** Retorno em forma de objeto uma consulta SQL **/
+           return $this->obj->query_fetch_object();
+
+       }
+
        /** Lista todos os registros **/
        public function All()
        {

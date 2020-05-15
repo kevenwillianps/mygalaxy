@@ -115,7 +115,7 @@ try{
                    $Files->Save($file_id, $name, $path);
 
                    /** Result **/
-                   $result = array("cod" => 1, "msg" => "Arquivo salvo com sucesso!");
+                   $result = array("cod" => 99, "msg" => "Arquivo salvo com sucesso!", "file_id" => $Files->GetLastRegister()->file_id);
 
                    /** Envio **/
                    echo json_encode($result);
@@ -198,7 +198,7 @@ try{
                        $Files->Save($file_id, $name, $path);
 
                        /** Result **/
-                       $result = array("cod" => 1, "msg" => "Arquivo salvo com sucesso!");
+                       $result = array("cod" => 99, "msg" => "Arquivo salvo com sucesso!", "file_id" => $Files->GetLastRegister()->file_id);
 
                        /** Envio **/
                        echo json_encode($result);
